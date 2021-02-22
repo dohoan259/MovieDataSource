@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.MaterialComponents.Toolbar.MainToolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline5</item>
+        <item name="titleTextColor">@color/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle">
+        <item name="android:textColor">@color/textOnSurfaceMediumEmphasis</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle">
+        <item name="android:textColor">@color/colorError</item>
+    </style>
+</resources>
