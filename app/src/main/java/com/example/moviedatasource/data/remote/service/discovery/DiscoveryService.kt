@@ -1,5 +1,6 @@
 package com.example.moviedatasource.data.remote.service.discovery
 
+import com.example.moviedatasource.data.remote.ApiResponse
 import com.example.moviedatasource.data.remote.model.response.DiscoverMoviesResponse
 import com.example.moviedatasource.data.remote.model.response.ErrorResponse
 import com.haroldadmin.cnradapter.NetworkResponse
@@ -28,6 +29,9 @@ interface DiscoveryService {
 
     @GET("movie/popular")
     suspend fun getPopularMovies(): NetworkResponse<DiscoverMoviesResponse, ErrorResponse>
+
+//    @GET("movie/popular")
+//    suspend fun getPopularMovies(): ApiResponse<DiscoverMoviesResponse>
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(): NetworkResponse<DiscoverMoviesResponse, ErrorResponse>

@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DiscoverMoviesResponse(
-    @field:Json(name = "page") val page: Int,
-    @field:Json(name = "results") val results: List<GeneralMovieResponse>,
-    @field:Json(name = "total_results") val totalResults: Int,
-    @field:Json(name = "total_pages") val totalPages: Int
+    @Json(name = "page") val page: Int?,
+    @Json(name = "results") val results: List<GeneralMovieResponse>,
+    @Json(name = "total_results") val totalResults: Int?,
+    @Json(name = "total_pages") val totalPages: Int?
 ) : Parcelable

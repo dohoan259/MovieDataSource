@@ -7,9 +7,9 @@ import java.util.*
 
 @Parcelize
 internal data class PersonResponse(
-    @field:Json(name = "id") val id: Int,
-    @field:Json(name = "profile_path") val profilePath: String?,
-    @field:Json(name = "name") val name: String,
-    @field:Json(name = "birthday") val birthday: Date?,
-    @field:Json(name = "biography") val biography: String
+    @Json(name = "id") val id: Int,
+    @Json(name = "profile_path") val profilePath: String?,
+    @Json(name = "name") val name: String,
+    @Json(name = "birthday") val birthday: Date?,
+    @Json(name = "biography") val biography: String
 ) : Parcelable

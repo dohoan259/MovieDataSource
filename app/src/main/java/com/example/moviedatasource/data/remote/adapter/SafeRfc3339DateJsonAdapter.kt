@@ -1,4 +1,4 @@
-package com.example.moviedatasource.data.remote
+package com.example.moviedatasource.data.remote.adapter
 
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader

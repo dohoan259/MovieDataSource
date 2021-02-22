@@ -2,7 +2,7 @@ package com.example.moviedatasource.di
 
 import android.content.Context
 import com.example.moviedatasource.BuildConfig
-import com.example.moviedatasource.data.remote.SafeRfc3339DateJsonAdapter
+import com.example.moviedatasource.data.remote.adapter.SafeRfc3339DateJsonAdapter
 import com.example.moviedatasource.data.remote.interceptor.ApiKeyInterceptor
 import com.example.moviedatasource.data.remote.service.AccountService
 import com.example.moviedatasource.data.remote.service.MovieService
