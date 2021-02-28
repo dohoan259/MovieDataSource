@@ -38,12 +38,13 @@ data class MovieStatesResponse(
 
 @Parcelize
 data class MovieVideo(
-    @Json(name="id") val id: String,
-    @Json(name="key") val key: String,
-    @Json(name="name") val name: String,
-    @Json(name="site") val site: String,
-    @Json(name="size") val size: Int,
-    @Json(name="type") val type: String): Parcelable
+    @Json(name = "id") val id: String,
+    @Json(name = "key") val key: String,
+    @Json(name = "name") val name: String,
+    @Json(name = "site") val site: String,
+    @Json(name = "size") val size: Int,
+    @Json(name = "type") val type: String
+): Parcelable
 
 @Parcelize
 data class MovieVideosResponse(

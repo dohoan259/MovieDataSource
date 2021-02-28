@@ -1,4 +1,4 @@
-package com.example.moviedatasource.data.model
+package com.example.moviedatasource.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,7 +8,8 @@ import java.util.*
 @Entity(tableName = "actors")
 data class Actor(
     @PrimaryKey
-    val id: Int,
+    @ColumnInfo(name = "actor_id")
+    val actorId: Int,
     @ColumnInfo(name = "profile_picture_url")
     val profilePictureUrl: String,
     @ColumnInfo(name = "name")

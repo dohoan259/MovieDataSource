@@ -1,6 +1,5 @@
 package com.example.moviedatasource.data.remote.service.discovery
 
-import com.example.moviedatasource.data.remote.ApiResponse
 import com.example.moviedatasource.data.remote.model.response.DiscoverMoviesResponse
 import com.example.moviedatasource.data.remote.model.response.ErrorResponse
 import com.haroldadmin.cnradapter.NetworkResponse

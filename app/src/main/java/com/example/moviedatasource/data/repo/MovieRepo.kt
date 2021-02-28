@@ -1,13 +1,17 @@
 package com.example.moviedatasource.data.repo
 
 import com.example.moviedatasource.data.Resource
-import com.example.moviedatasource.data.model.Actor
-import com.example.moviedatasource.data.model.CollectionType
-import com.example.moviedatasource.data.model.Movie
-import com.example.moviedatasource.data.remote.NetworkBoundResource
-import com.example.moviedatasource.data.remote.RemoteMovieSource
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import com.example.moviedatasource.data.local.entity.CollectionType
+import com.example.moviedatasource.data.local.entity.Movie
+import com.example.moviedatasource.data.local.entity.MovieCollection
+import com.example.moviedatasource.data.model.CollectionWithMovies
+import com.example.moviedatasource.data.model.MovieDetail
+import com.example.moviedatasource.data.remote.source.NetworkBoundResource
+import com.example.moviedatasource.data.remote.source.RemoteCollectionSource
+import com.example.moviedatasource.data.remote.source.RemoteMovieSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,12 +19,13 @@ import javax.inject.Singleton
 class MovieRepo @Inject constructor(
     private val localMovieSource: LocalMovieSource,
     private val remoteMovieSource: RemoteMovieSource,
+    private val remoteCollectionSource: RemoteCollectionSource
 ) {
     @FlowPreview
     @ExperimentalCoroutinesApi
     suspend fun getMovieDetails(movieId: Int) =
-        object : NetworkBoundResource<Movie>() {
-            override suspend fun fetchFromNetwork(): Flow<Resource<Movie>> {
+        object : NetworkBoundResource<MovieDetail, Movie>() {
+            override suspend fun fetchFromNetwork(): Resource<Movie> {
                 return remoteMovieSource.getMovieDetails(movieId)
             }
 
@@ -28,56 +33,41 @@ class MovieRepo @Inject constructor(
                 localMovieSource.saveMovie(item)
             }
 
-            override suspend fun shouldFetch(): Flow<Boolean> {
-                val isInDb = localMovieSource.isMovieInDatabase(movieId)
-                    .map { count ->
-                        count == 0
-                    }
-                val isModelComplete = localMovieSource
-                    .getMovieDetails(movieId)
-                    .map { movie ->
-                        movie.isModelComplete
-                    }
-
-                return isInDb.zip(isModelComplete) { dbStatus, modelStatus ->
-                    !(dbStatus && modelStatus)
-                }
+            override suspend fun shouldFetch(resultType: MovieDetail?): Boolean {
+                return resultType == null || !resultType.movie.isModelComplete
             }
 
-            override suspend fun loadFromDb(): Flow<Resource<Movie>> {
-                return localMovieSource.getMovieDetails(movieId = movieId).map { movie ->
-                    Resource.Success(movie)
-                }
+            override suspend fun loadFromDb(): Flow<MovieDetail> {
+                return localMovieSource.getMovieDetails(movieId = movieId)
             }
         }
 
-    suspend fun getActorsInMovie(movieId: Int): Flow<Resource<List<Actor>>> {
-        return localMovieSource.getActorsInMovie(movieId)
-            .map { actors -> Resource.Success(actors) }
-    }
+//    suspend fun getActorsInMovie(movieId: Int): Flow<Resource<List<Actor>>> {
+//        return localMovieSource.getActorsInMovie(movieId)
+//            .map { actors -> Resource.Success(actors) }
+//    }
 
     @ExperimentalCoroutinesApi
     @FlowPreview
-    fun getPopularMovies() =
-        object : NetworkBoundResource<List<Movie>>() {
-            override suspend fun fetchFromNetwork(): Flow<Resource<List<Movie>>> {
-                return remoteMovieSource.getPopularMovies()
+    fun getCollection(type: CollectionType, region: String = "") =
+        object : NetworkBoundResource<CollectionWithMovies, List<Movie>>() {
+            override suspend fun fetchFromNetwork(): Resource<List<Movie>> {
+                return remoteCollectionSource.getCollection(type = type, region = region)
             }
 
             override suspend fun saveNetworkResult(item: List<Movie>) {
-                localMovieSource.saveMovies(item)
+                localMovieSource.saveMoviesForCollection(
+                    MovieCollection(type.name),
+                    item
+                )
             }
 
-            override suspend fun shouldFetch(): Flow<Boolean> {
-                return localMovieSource.isCollectionInDatabase(CollectionType.Popular)
-                    .map { it == 0 }
+            override suspend fun shouldFetch(resultType: CollectionWithMovies?): Boolean {
+                return resultType == null || resultType.movies.isNotEmpty()
             }
 
-            override suspend fun loadFromDb(): Flow<Resource<List<Movie>>> {
-                return localMovieSource.getCollection(type = CollectionType.Popular)
-                    .map { movieCollection ->
-                        Resource.Success(movieCollection)
-                    }
+            override suspend fun loadFromDb(): Flow<CollectionWithMovies> {
+                return localMovieSource.getCollection(type = type)
             }
         }.asFlow()
 }

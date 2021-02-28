@@ -1,17 +1,14 @@
 package com.example.moviedatasource.data.repo
 
+import androidx.room.Transaction
 import com.example.moviedatasource.data.local.ActorDao
 import com.example.moviedatasource.data.local.CollectionDao
 import com.example.moviedatasource.data.local.MovieDao
-import com.example.moviedatasource.data.model.Actor
-import com.example.moviedatasource.data.model.Cast
-import com.example.moviedatasource.data.model.CollectionType
-import com.example.moviedatasource.data.model.Movie
+import com.example.moviedatasource.data.local.entity.*
+import com.example.moviedatasource.data.model.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.switchMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,8 +18,13 @@ class LocalMovieSource @Inject constructor(
     private val actorDao: ActorDao,
     private val collectionDao: CollectionDao
 ) : MovieSource {
-    override suspend fun getMovieDetails(movieId: Int): Flow<Movie> {
-        return movieDao.getMovie(movieId = movieId)
+
+    override suspend fun getAllMovies(): Flow<List<Movie>> {
+        return movieDao.getAllMovies()
+    }
+
+    override fun getMovieDetails(movieId: Int): Flow<MovieDetail> {
+        return movieDao.getMovieDetail(movieId = movieId)
     }
 
     override suspend fun saveMovie(movie: Movie) {
@@ -33,15 +35,30 @@ class LocalMovieSource @Inject constructor(
         movieDao.saveMovies(movies = movies.toTypedArray())
     }
 
-    override suspend fun getActorsInMovie(movieId: Int): Flow<List<Actor>> {
-        return movieDao.getActorsForMovie(movieId = movieId)
+    @Transaction
+    override suspend fun saveMoviesForCollection(collection: MovieCollection, movies: List<Movie>) {
+        collectionDao.saveCollection(collection)
+        val movieIds = movieDao.saveMovies(movies = movies.toTypedArray())
+        val movieCollections = ArrayList<MovieCollectionCrossRef>()
+        for (movieId in movieIds) {
+            val movieCollectionCrossRef = MovieCollectionCrossRef(
+                movieId = movieId.toInt(),
+                collectionId = collection.name
+            )
+            movieCollections.add(movieCollectionCrossRef)
+        }
+        val collectionRefs = movieDao.saveAllCollectionCross(*movieCollections.toTypedArray())
     }
+
+//    override suspend fun getActorsInMovie(movieId: Int): Flow<List<Actor>> {
+//        return movieDao.getActorsForMovie(movieId = movieId)
+//    }
 
     override suspend fun saveCast(cast: Cast) {
         movieDao.saveCast(cast)
-        cast.castMembers?.let {
-            actorDao.saveActors(*it.toTypedArray())
-        }
+//        cast.castMembers?.let {
+//            actorDao.saveActors(*it.toTypedArray())
+//        }
     }
 
     override suspend fun isMovieInDatabase(id: Int) = movieDao.isMovieInDatabase(id)
@@ -49,19 +66,10 @@ class LocalMovieSource @Inject constructor(
     override suspend fun isCollectionInDatabase(type: CollectionType) =
         collectionDao.isCollectionInDatabase(type.name)
 
+    @FlowPreview
     @ExperimentalCoroutinesApi
-    override suspend fun getCollection(type: CollectionType): Flow<List<Movie>> {
-        return when (type) {
-            CollectionType.Popular ->
-                collectionDao.getPopularCollection()
-                    .flatMapLatest { collection ->
-                        collectionDao.getMoviesForCollection(collection.contents)
-                    }
-            else ->
-                collectionDao.getPopularCollection()
-                    .flatMapLatest { collection ->
-                        collectionDao.getMoviesForCollection(collection.contents)
-                    }
-        }
+    override fun getCollection(type: CollectionType): Flow<CollectionWithMovies> {
+
+        return collectionDao.getCollectionWithMovies(type.name)
     }
 }

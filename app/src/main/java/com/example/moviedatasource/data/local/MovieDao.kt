@@ -1,34 +1,45 @@
 package com.example.moviedatasource.data.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.example.moviedatasource.data.model.Actor
-import com.example.moviedatasource.data.model.Cast
-import com.example.moviedatasource.data.model.Movie
+import androidx.room.*
+import com.example.moviedatasource.data.local.entity.Cast
+import com.example.moviedatasource.data.local.entity.Movie
+import com.example.moviedatasource.data.local.entity.MovieCollectionCrossRef
+import com.example.moviedatasource.data.model.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
-    @Query("SELECT * FROM movies WHERE id = :movieId")
-    fun getMovie(movieId: Int): Flow<Movie>
+    @Query("SELECT * FROM movies")
+    fun getAllMovies(): Flow<List<Movie>>
 
-    @Query("SELECT * from actors WHERE id IN (:movieId)")
-    fun getActorsForMovie(movieId: Int): Flow<List<Actor>>
+    @Query("SELECT * FROM movies WHERE movie_id = :movieId")
+    fun getMovieById(movieId: Int): Flow<Movie>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveMovie(movie: Movie)
+    @Transaction
+    @Query("SELECT * FROM movies WHERE movie_id = :movieId")
+    fun getMovieDetail(movieId: Int): Flow<MovieDetail>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveMovies(vararg movies: Movie)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveCast(cast: Cast)
+//    @Query("SELECT * from actors WHERE movie_id IN (:movieId)")
+//    fun getActorsForMovie(movieId: Int): Flow<List<Actor>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveAllCasts(vararg cast: Cast)
+    suspend fun saveMovie(movie: Movie): Long
 
-    @Query("SELECT COUNT(*) FROM movies WHERE id = :id")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveMovies(vararg movies: Movie): Array<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveCollectionCross(collectionCrossRef: MovieCollectionCrossRef): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAllCollectionCross(vararg collectionCrossRef: MovieCollectionCrossRef): Array<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveCast(cast: Cast): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAllCasts(vararg cast: Cast): Array<Long>
+
+    @Query("SELECT COUNT(*) FROM movies WHERE movie_id = :id")
     fun isMovieInDatabase(id: Int): Flow<Int>
 }

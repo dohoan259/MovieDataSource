@@ -1,49 +1,45 @@
 package com.example.moviedatasource.utils
 
 import com.example.moviedatasource.data.Resource
-import com.example.moviedatasource.data.model.Actor
-import com.example.moviedatasource.data.model.Movie
-import com.example.moviedatasource.data.model.MovieTrailer
+import com.example.moviedatasource.data.local.entity.Actor
+import com.example.moviedatasource.data.local.entity.Movie
+import com.example.moviedatasource.data.local.entity.MovieTrailer
 import com.example.moviedatasource.data.remote.model.response.*
-import com.example.moviedatasource.data.remote.model.response.CastMember
-import com.example.moviedatasource.data.remote.model.response.MovieResponse
-import com.example.moviedatasource.data.remote.model.response.MovieVideo
-import com.example.moviedatasource.data.remote.model.response.PersonResponse
 
-internal fun <T: Any> T.toResource(): Resource<T> = Resource.Success(this)
+internal fun <T : Any> T.toResource(): Resource<T> = Resource.Success(this)
 
 internal fun GeneralMovieResponse.toMovie(): Movie {
     return Movie(
-        this.id,
-        this.title,
+        movieId = this.id,
+        title = this.title,
         this.posterPath.getPosterUrl(),
         this.backdropPath.getBackdropUrl(),
         this.overview,
         this.voteAverage,
         this.releaseDate,
-        this.genreIds,
+//        this.genreIds,
         this.isAdultMovie,
         null,
         null,
-        null,
+//        null,
         isModelComplete = false
     )
 }
 
 internal fun MovieResponse.toMovie(): Movie {
     return Movie(
-        id = this.id,
+        movieId = this.id,
         title = this.title,
         posterPath = this.posterPath.getPosterUrl(),
         backdropPath = this.backdropPath.getBackdropUrl(),
         overview = this.overview ?: "",
         voteAverage = this.voteAverage,
         releaseDate = this.releaseDate,
-        genreIds = this.genres.map { genrePair -> genrePair.id },
+//        genreIds = this.genres.map { genrePair -> genrePair.id },
         isAdult = this.isAdult,
         budget = this.budget,
         revenue = this.revenue,
-        genres = this.genres.map { genrePair -> genrePair.name },
+//        genres = this.genres.map { genrePair -> genrePair.name },
         isModelComplete = true
     )
 }
@@ -72,8 +68,9 @@ internal fun PersonResponse.toActor(): Actor {
 
 internal fun MovieVideo.toMovieTrailer(movieId: Int): MovieTrailer {
     return MovieTrailer(
-        movieId,
-        this.key
+        movieId = movieId,
+        youtubeKey = this.key,
+        id = 0
     )
 }
 
