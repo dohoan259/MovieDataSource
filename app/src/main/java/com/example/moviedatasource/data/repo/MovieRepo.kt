@@ -4,7 +4,6 @@ import com.example.moviedatasource.data.Resource
 import com.example.moviedatasource.data.local.entity.CollectionType
 import com.example.moviedatasource.data.local.entity.Movie
 import com.example.moviedatasource.data.local.entity.MovieCollection
-import com.example.moviedatasource.data.model.CollectionWithMovies
 import com.example.moviedatasource.data.model.MovieDetail
 import com.example.moviedatasource.data.remote.source.NetworkBoundResource
 import com.example.moviedatasource.data.remote.source.RemoteCollectionSource
@@ -12,6 +11,7 @@ import com.example.moviedatasource.data.remote.source.RemoteMovieSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,7 +50,7 @@ class MovieRepo @Inject constructor(
     @ExperimentalCoroutinesApi
     @FlowPreview
     fun getCollection(type: CollectionType, region: String = "") =
-        object : NetworkBoundResource<CollectionWithMovies, List<Movie>>() {
+        object : NetworkBoundResource<List<Movie>, List<Movie>>() {
             override suspend fun fetchFromNetwork(): Resource<List<Movie>> {
                 return remoteCollectionSource.getCollection(type = type, region = region)
             }
@@ -62,12 +62,15 @@ class MovieRepo @Inject constructor(
                 )
             }
 
-            override suspend fun shouldFetch(resultType: CollectionWithMovies?): Boolean {
-                return resultType == null || resultType.movies.isNotEmpty()
+            override suspend fun shouldFetch(resultType: List<Movie>?): Boolean {
+                return resultType == null || resultType.isNotEmpty()
             }
 
-            override suspend fun loadFromDb(): Flow<CollectionWithMovies> {
-                return localMovieSource.getCollection(type = type)
+            override suspend fun loadFromDb(): Flow<List<Movie>> {
+                return localMovieSource.getCollectionWithMovie(type = type)
+                    .map { collectionWithMovies ->
+                        collectionWithMovies?.movies
+                    }
             }
         }.asFlow()
 }

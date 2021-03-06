@@ -19,6 +19,9 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE movie_id = :movieId")
     fun getMovieDetail(movieId: Int): Flow<MovieDetail>
 
+    @Query("SELECT * FROM movies WHERE movie_id = :movieId")
+    fun getMovieByCollection(movieId: Int): Flow<List<Movie>>
+
 //    @Query("SELECT * from actors WHERE movie_id IN (:movieId)")
 //    fun getActorsForMovie(movieId: Int): Flow<List<Actor>>
 

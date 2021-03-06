@@ -16,6 +16,9 @@ interface CollectionDao {
     fun isCollectionInDatabase(name: String): Flow<Int>
 
     @Query("SELECT * FROM collections WHERE name = :name")
+    fun getCollectionByName(name: String): Flow<MovieCollection>
+
+    @Query("SELECT * FROM collections WHERE name = :name")
     fun getCollectionWithMovies(name: String): Flow<CollectionWithMovies>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -27,5 +27,5 @@ interface MovieSource {
 
     suspend fun isCollectionInDatabase(type: CollectionType): Flow<Int>
 
-    fun getCollection(type: CollectionType): Flow<CollectionWithMovies>
+    fun getCollectionWithMovie(type: CollectionType): Flow<CollectionWithMovies>
 }

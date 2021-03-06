@@ -40,4 +40,7 @@ ext {
     moshiVersion = '1.11.0'
     cnrAdapterVersion = '4.1.0'
     hiltVersion = '2.32-alpha'
+    glide = '4.9.0'
+    preference = "1.1.0-beta01"
+    legacyPreferenceV14 = "1.0.0"
 }
