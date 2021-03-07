@@ -4,38 +4,22 @@
     android:id="@+id/homeRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mainAppBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            style="@style/Widget.MaterialComponents.Toolbar.MainToolbar"
-            android:id="@+id/mainToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="@string/app_name" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        android:id="@+id/appBar"
+        layout="@layout/app_bar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorSurfaceDark"
+        android:background="@color/onPrimaryActivated"
         android:clipToPadding="false"
         android:fillViewport="true"
         android:paddingBottom="?attr/actionBarSize"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toTopOf="@+id/mainNavView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/navHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
@@ -55,7 +39,7 @@
         app:itemBackground="@color/colorSurface"
         app:itemIconTint="@color/bottom_navigation_icons"
         app:itemTextColor="@color/bottom_navigation_text"
-        app:menu="@menu/menu_app_destinations"
-        app:labelVisibilityMode="labeled"/>
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_app_destinations" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

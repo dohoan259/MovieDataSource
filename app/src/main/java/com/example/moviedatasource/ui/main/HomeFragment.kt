@@ -1,8 +1,6 @@
 package com.example.moviedatasource.ui.main
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +27,7 @@ import kotlin.math.roundToInt
 class HomeFragment : BaseFragment() {
 
     private lateinit var binding: FragmentHomeBinding
+
     @ExperimentalCoroutinesApi
     @FlowPreview
     private val homeViewModel: HomeViewModel by viewModels()
@@ -56,9 +55,6 @@ class HomeFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         glideRequestManager = Glide.with(this)
-        val handlerThread = HandlerThread("epoxy").apply {
-            start()
-        }
         homeEpoxyController = HomeEpoxyController(
             callbacks = callbacks,
             glide = glideRequestManager,
