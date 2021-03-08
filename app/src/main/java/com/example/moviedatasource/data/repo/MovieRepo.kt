@@ -1,5 +1,6 @@
 package com.example.moviedatasource.data.repo
 
+import android.util.Log
 import com.example.moviedatasource.data.Resource
 import com.example.moviedatasource.data.local.entity.CollectionType
 import com.example.moviedatasource.data.local.entity.Movie
@@ -63,13 +64,20 @@ class MovieRepo @Inject constructor(
             }
 
             override suspend fun shouldFetch(resultType: List<Movie>?): Boolean {
-                return resultType == null || resultType.isNotEmpty()
+                return resultType == null || resultType.isEmpty()
             }
 
             override suspend fun loadFromDb(): Flow<List<Movie>> {
                 return localMovieSource.getCollectionWithMovie(type = type)
                     .map { collectionWithMovies ->
-                        collectionWithMovies?.movies
+
+                        Log.d("hoan.dv", "aa: $collectionWithMovies")
+
+                        if (collectionWithMovies?.movies.isNullOrEmpty()) {
+                            ArrayList()
+                        } else {
+                            collectionWithMovies?.movies!!
+                        }
                     }
             }
         }.asFlow()

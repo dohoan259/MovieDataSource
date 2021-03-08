@@ -9,11 +9,11 @@ import com.example.moviedatasource.data.local.entity.MovieCollectionCrossRef
 
 data class CollectionWithMovies(
     @Embedded
-    val movieCollection: MovieCollection,
+    val movieCollection: MovieCollection?,
     @Relation(
         parentColumn = "name",
         entityColumn = "movie_id",
         associateBy = Junction(MovieCollectionCrossRef::class)
     )
-    val movies: List<Movie>
+    val movies: List<Movie>?
 )

@@ -18,7 +18,7 @@ private val pastDate = run {
 interface DiscoveryService {
 
     @GET("discover/movie")
-    fun getMoviesInTheatre(
+    suspend fun getMoviesInTheatre(
         @Query("sort_by") sortBy: String = SortParameters.PopularityDsc,
         @Query("page") page: Int = 1,
         @Query("region") region: String,

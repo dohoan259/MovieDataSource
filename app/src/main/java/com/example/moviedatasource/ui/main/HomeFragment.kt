@@ -53,7 +53,7 @@ class HomeFragment : BaseFragment() {
     @FlowPreview
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        super.onCreate(savedInstanceState)
         glideRequestManager = Glide.with(this)
         homeEpoxyController = HomeEpoxyController(
             callbacks = callbacks,
@@ -61,7 +61,6 @@ class HomeFragment : BaseFragment() {
             EpoxyAsyncUtil.getAsyncBackgroundHandler()
         )
 
-        super.onCreate(savedInstanceState)
         homeViewModel.viewState.observe(this) { viewState ->
             homeEpoxyController.setData(viewState)
         }

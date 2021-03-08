@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.example.moviedatasource.R
 
+@SuppressLint("NonConstantResourceId")
 @EpoxyModelClass(layout = R.layout.item_section_header)
 abstract class HeaderModel : EpoxyModelWithHolder<HeaderModel.HeaderViewHolder>() {
 
@@ -73,6 +74,7 @@ abstract class MovieModel : EpoxyModelWithHolder<MovieModel.MovieViewHolder>() {
     }
 }
 
+@SuppressLint("NonConstantResourceId")
 @EpoxyModelClass(layout = R.layout.view_info_text)
 abstract class InfoTextModel : EpoxyModelWithHolder<InfoTextModel.InfoTextViewHolder>() {
 
@@ -91,7 +93,8 @@ abstract class InfoTextModel : EpoxyModelWithHolder<InfoTextModel.InfoTextViewHo
 
 @SuppressLint("NonConstantResourceId")
 @EpoxyModelClass(layout = R.layout.item_movie_search_result)
-abstract class MovieSearchResultModel : EpoxyModelWithHolder<MovieSearchResultModel.MovieSearchResultHolder>() {
+abstract class MovieSearchResultModel :
+    EpoxyModelWithHolder<MovieSearchResultModel.MovieSearchResultHolder>() {
 
     @EpoxyAttribute
     lateinit var posterUrl: String
@@ -143,7 +146,7 @@ abstract class MovieSearchResultModel : EpoxyModelWithHolder<MovieSearchResultMo
 
 @SuppressLint("NonConstantResourceId")
 @EpoxyModelClass(layout = R.layout.view_loading)
-abstract class LoadingModel: EpoxyModelWithHolder<LoadingModel.LoadingHolder>() {
+abstract class LoadingModel : EpoxyModelWithHolder<LoadingModel.LoadingHolder>() {
 
     @EpoxyAttribute
     lateinit var description: String
@@ -153,7 +156,7 @@ abstract class LoadingModel: EpoxyModelWithHolder<LoadingModel.LoadingHolder>() 
         holder.description.text = description
     }
 
-    inner class LoadingHolder: KotlinEpoxyHolder() {
+    inner class LoadingHolder : KotlinEpoxyHolder() {
         val description by bind<TextView>(R.id.tvLoadingDescription)
     }
 }

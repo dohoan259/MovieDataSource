@@ -68,8 +68,7 @@ class LocalMovieSource @Inject constructor(
 
     @FlowPreview
     @ExperimentalCoroutinesApi
-    override fun getCollectionWithMovie(type: CollectionType): Flow<CollectionWithMovies> {
-
+    override fun getCollectionWithMovie(type: CollectionType): Flow<CollectionWithMovies?> {
         return collectionDao.getCollectionWithMovies(type.name)
     }
 }

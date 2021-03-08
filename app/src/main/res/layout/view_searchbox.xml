@@ -30,11 +30,11 @@
                 android:id="@+id/etSearchBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:background="#00000000"
                 android:hint="Search"
                 android:textSize="15sp"
                 android:inputType="text"
-                android:maxLines="1"/>
+                android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

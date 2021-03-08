@@ -9,4 +9,10 @@ sealed class UIState {
         val topRatedMoviesResource: Resource<List<Movie>>,
         val searchResultsResource: Resource<List<Movie>>?
     ): UIState()
+
+    data class InTheatresScreenState(
+        val inTheatresMoviesResource: Resource<List<Movie>>,
+        val countryCode: String,
+        val countryName: String
+    ): UIState()
 }
