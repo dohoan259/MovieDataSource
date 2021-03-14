@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.bumptech.glide.Glide
@@ -20,7 +22,10 @@ import com.example.moviedatasource.utils.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -34,6 +39,17 @@ class HomeFragment : BaseFragment() {
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
+            val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(
+                movieId = id,
+                transitionName = transitionName,
+                isAuthenticate = false
+            )
+            sharedView?.let {
+                val extras = FragmentNavigatorExtras(sharedView to transitionName)
+                findNavController().navigate(action, extras)
+            } ?: findNavController().navigate(action)
+
+
 //            val action = HomeFragmentDirections.viewMovieDetails(
 //                movieIdArg = id,
 //                isAuthenticatedArg = mainViewModel.isAuthenticated,
@@ -96,13 +112,16 @@ class HomeFragment : BaseFragment() {
     @FlowPreview
     private fun setupSearchBox() {
         binding.searchBox.etSearchBox.textChanges()
-            .distinctUntilChanged()
+//            .distinctUntilChanged()
             .filterNot { it.isNullOrBlank() }
-            .debounce(300)
+//            .debounce(300)
             .flatMapLatest {
                 homeViewModel.searchMovie(it!!.toString())
             }
-            .onEach { }
+            .onEach {
+                //todo: update UI
+            }
             .launchIn(lifecycleScope)
+
     }
 }

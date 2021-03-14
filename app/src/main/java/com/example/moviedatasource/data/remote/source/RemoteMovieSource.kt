@@ -81,4 +81,19 @@ class RemoteMovieSource @Inject constructor(
             else -> Resource.Error("Unknown Error")
         }
     }
+
+    suspend fun getSearchResultForQuery(query: String): Resource<List<Movie>> {
+        return when (val movieSearchResult = searchService.searchForMovie(query = query).await()) {
+            is NetworkResponse.Success -> {
+                Resource.Success(movieSearchResult.body.results.map { it.toMovie() })
+            }
+            is NetworkResponse.ServerError -> {
+                Resource.Error<List<Movie>>(movieSearchResult.body?.statusMessage ?: "Server Error")
+            }
+            is NetworkResponse.NetworkError -> {
+                Resource.Error(movieSearchResult.error.localizedMessage ?: "Network Error")
+            }
+            else -> Resource.Error("Unknown Error")
+        }
+    }
 }

@@ -12,6 +12,7 @@ import com.example.moviedatasource.data.remote.source.RemoteMovieSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -79,6 +80,27 @@ class MovieRepo @Inject constructor(
                             collectionWithMovies?.movies!!
                         }
                     }
+            }
+        }.asFlow()
+
+    @ExperimentalCoroutinesApi
+    @FlowPreview
+    fun getSearchResultForQuery(query: String) =
+        object : NetworkBoundResource<List<Movie>, List<Movie>>() {
+            override suspend fun fetchFromNetwork(): Resource<List<Movie>> {
+                return remoteMovieSource.getSearchResultForQuery(query)
+            }
+
+            override suspend fun saveNetworkResult(item: List<Movie>) {
+
+            }
+
+            override suspend fun shouldFetch(resultType: List<Movie>?): Boolean {
+                return true
+            }
+
+            override suspend fun loadFromDb(): Flow<List<Movie>> {
+                return flow {}
             }
         }.asFlow()
 }

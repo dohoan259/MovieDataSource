@@ -62,7 +62,16 @@ class HomeViewModel @Inject constructor(
         return movieRepo.getCollection(CollectionType.TopRated)
     }
 
-    fun searchMovie(query: String): Flow<List<Movie>> = flow {
-
+    fun searchMovie(query: String) = movieRepo.getSearchResultForQuery(query = query).onEach {
+        _viewState.value =
+            _viewState.value?.popularMoviesResource?.let { it1 ->
+                _viewState.value?.topRatedMoviesResource?.let { it2 ->
+                    UIState.HomeScreenState(
+                        popularMoviesResource = it1,
+                        topRatedMoviesResource = it2,
+                        searchResultsResource = it
+                    )
+                }
+            }
     }
 }

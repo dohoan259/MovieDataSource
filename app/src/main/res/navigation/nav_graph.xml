@@ -10,6 +10,7 @@
         android:name="com.example.moviedatasource.ui.main.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
+
         <action
             android:id="@+id/action_homeFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
@@ -18,7 +19,23 @@
         android:id="@+id/movieDetailFragment"
         android:name="com.example.moviedatasource.ui.moviedetail.MovieDetailFragment"
         android:label="fragment_movie_detail"
-        tools:layout="@layout/fragment_movie_detail" />
+        tools:layout="@layout/fragment_movie_detail">
+
+        <argument
+            android:name="movieId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+
+        <argument
+            android:name="transitionName"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="isAuthenticate"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.moviedatasource.ui.about.AboutFragment"

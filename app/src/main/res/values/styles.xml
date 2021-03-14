@@ -24,4 +24,10 @@
     <style name="PreferenceThemeOverlay.v14.Material.MovieDBPreferenceTheme">
         <item name="android:textColorSecondary">@color/textOnSurfaceMediumEmphasis</item>
     </style>
+
+    <style name="Widget.MaterialComponents.Chip.Action.MovieInfoChip">
+        <item name="chipBackgroundColor">@color/colorSurfaceLight</item>
+        <item name="android:textColor">@color/textOnPrimaryHighEmphasis</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+    </style>
 </resources>

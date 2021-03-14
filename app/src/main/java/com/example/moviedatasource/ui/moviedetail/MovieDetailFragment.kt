@@ -4,18 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.moviedatasource.R
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.RequestManager
+import com.example.moviedatasource.databinding.FragmentMovieDetailBinding
 import com.example.moviedatasource.ui.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-
+@AndroidEntryPoint
 class MovieDetailFragment : BaseFragment() {
+
+    private lateinit var binding: FragmentMovieDetailBinding
+    private val safeArgs: MovieDetailFragmentArgs by navArgs()
+
+    private lateinit var glideRequestManager: RequestManager
+
+    @ExperimentalCoroutinesApi
+    @FlowPreview
+    private val movieDetailViewModel: MovieDetailViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_detail, container, false)
+    ): View {
+        binding = FragmentMovieDetailBinding.inflate(layoutInflater)
+        return binding.root
     }
 }
